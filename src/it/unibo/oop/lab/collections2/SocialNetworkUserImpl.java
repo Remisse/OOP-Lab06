@@ -1,7 +1,6 @@
 package it.unibo.oop.lab.collections2;
 
-import java.util.Collection;
-import java.util.List;
+import java.util.*;
 
 /**
  * 
@@ -29,7 +28,9 @@ public class SocialNetworkUserImpl<U extends User> extends UserImpl implements S
      * 
      * think of what type of keys and values would best suit the requirements
      */
-
+	
+	private Map<U, String> followedUsers;
+	
     /*
      * [CONSTRUCTORS]
      * 
@@ -40,7 +41,6 @@ public class SocialNetworkUserImpl<U extends User> extends UserImpl implements S
      * 
      * 2) Define a further constructor where age is defaulted to -1
      */
-
     /**
      * Builds a new {@link SocialNetworkUserImpl}.
      * 
@@ -54,9 +54,16 @@ public class SocialNetworkUserImpl<U extends User> extends UserImpl implements S
      *            alias of the user, i.e. the way a user is identified on an
      *            application
      */
-    public SocialNetworkUserImpl(final String name, final String surname, final String user, final int userAge) {
+    public SocialNetworkUserImpl(final String name, final String surname, final String user,
+    						final int userAge, final Map<U, String> followedUsers) {
         super(name, surname, user, userAge);
+        this.followedUsers = followedUsers;
     }
+    
+    public SocialNetworkUserImpl(final String name, final String surname, final String user,
+    						final Map<U, String> followedUsers) {
+		this(name, surname, user, -1, followedUsers);
+	}
 
     /*
      * [METHODS]
@@ -64,19 +71,25 @@ public class SocialNetworkUserImpl<U extends User> extends UserImpl implements S
      * Implements the methods below
      */
 
-    @Override
     public boolean addFollowedUser(final String circle, final U user) {
-        return false;
+    	if (user != null && circle != null) {
+    		this.followedUsers.put(user, circle);
+    		return true;
+    	}
+    	return false;
     }
 
-    @Override
     public Collection<U> getFollowedUsersInGroup(final String groupName) {
-        return null;
+    	List<U> outList = new LinkedList<>();
+    	for (U user : this.followedUsers.keySet()) {
+    		if (this.followedUsers.get(user) == groupName) {
+    			outList.add(user);
+    		}
+    	}
+        return outList;
     }
 
-    @Override
     public List<U> getFollowedUsers() {
-        return null;
+        return new LinkedList<>(this.followedUsers.keySet());
     }
-
 }
