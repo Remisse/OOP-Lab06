@@ -73,8 +73,7 @@ public class SocialNetworkUserImpl<U extends User> extends UserImpl implements S
 
     public boolean addFollowedUser(final String circle, final U user) {
     	if (user != null && circle != null) {
-    		this.followedUsers.put(user, circle);
-    		return true;
+    		return this.followedUsers.putIfAbsent(user, circle) == null;
     	}
     	return false;
     }
