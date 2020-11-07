@@ -80,9 +80,9 @@ public class SocialNetworkUserImpl<U extends User> extends UserImpl implements S
 
     public Collection<U> getFollowedUsersInGroup(final String groupName) {
     	List<U> outList = new LinkedList<>();
-    	for (U user : this.followedUsers.keySet()) {
-    		if (this.followedUsers.get(user) == groupName) {
-    			outList.add(user);
+    	for (Map.Entry<U, String> entry : this.followedUsers.entrySet()) {
+    		if (entry.getValue() == groupName) {
+    			outList.add(entry.getKey());
     		}
     	}
         return outList;
