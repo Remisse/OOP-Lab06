@@ -17,11 +17,15 @@ public class DumbBreadthFirst<N> {
 		this.parents = new HashMap<>();
 	}
 	
+	private boolean hasAlreadyBeenExplored(N node) {
+		return this.parents.keySet().contains(node);
+	}
+	
 	private void buildParentsMap(N target) {
 		while (!this.queue.isEmpty()) {
 			N nodeBeingExplored = this.queue.poll();
 			for (N adjacentNode : graph.linkedNodes(nodeBeingExplored)) {
-				if (!this.parents.keySet().contains(adjacentNode)) { //if this adjacent node hasn't been visited yet...
+				if (!this.hasAlreadyBeenExplored(adjacentNode)) {
 					this.parents.put(adjacentNode, nodeBeingExplored);
 					if (!adjacentNode.equals(target)) {
 						this.queue.add(adjacentNode);
