@@ -8,12 +8,12 @@ import java.util.Queue;
 
 public class DumbBreadthFirst<N> {
 	private Graph<N> graph;
-	private Queue<N> queue;
-	private Map<N, N> parents;
+	private Map<N, N> parents; //Map<N, Pair<N, Double>> parents;
+							   //each node would be mapped to a parent alongside
+							   //that node's distance from the source.
 	
 	public DumbBreadthFirst(Graph<N> graph) {
 		this.graph = graph;
-		this.queue = new LinkedList<>();
 		this.parents = new HashMap<>();
 	}
 	
@@ -21,16 +21,18 @@ public class DumbBreadthFirst<N> {
 		return this.parents.keySet().contains(node);
 	}
 	
-	private void buildParentsMap(N target) {
-		while (!this.queue.isEmpty()) {
-			N nodeBeingExplored = this.queue.poll();
+	private void buildParentsMap(N source, N target) {
+		Queue<N> queue = new LinkedList<>();
+		queue.add(source);
+		while (!queue.isEmpty()) {
+			N nodeBeingExplored = queue.poll();
 			for (N adjacentNode : graph.linkedNodes(nodeBeingExplored)) {
 				if (!this.hasAlreadyBeenExplored(adjacentNode)) {
 					this.parents.put(adjacentNode, nodeBeingExplored);
 					if (!adjacentNode.equals(target)) {
-						this.queue.add(adjacentNode);
+						queue.add(adjacentNode);
 					} else {
-						this.queue.clear(); //break in disguise
+						queue.clear(); //break in disguise
 					}	
 				}	
 			}
@@ -52,9 +54,8 @@ public class DumbBreadthFirst<N> {
 	}
 	
 	public List<N> findSomePath(N source, N target) {
-		this.queue.add(source);
 		this.parents.put(source, source);
-		this.buildParentsMap(target);
+		this.buildParentsMap(source, target);
 		return traceBackToSource(target);
 	}
 }
